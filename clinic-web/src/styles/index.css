@@ -1,0 +1,48 @@
+:root {
+  --clinic-primary: #2bb673;
+  --clinic-primary-dark: #1f9a5f;
+  --clinic-sidebar: #1f2d3d;
+  --clinic-sidebar-active: #2bb673;
+  --clinic-bg: #f0f2f5;
+  --clinic-header-h: 52px;
+  --clinic-sidebar-w: 72px;
+  --clinic-card: #ffffff;
+  --clinic-text: #303133;
+  --clinic-muted: #909399;
+  --clinic-border: #ebeef5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--clinic-text);
+  background: var(--clinic-bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--clinic-primary);
+  --el-button-border-color: var(--clinic-primary);
+  --el-button-hover-bg-color: var(--clinic-primary-dark);
+  --el-button-hover-border-color: var(--clinic-primary-dark);
+}
+
+.page-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--clinic-muted);
+  font-size: 16px;
+}
