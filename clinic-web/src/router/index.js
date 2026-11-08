@@ -36,6 +36,12 @@ const routes = [
         meta: { title: '门诊', menu: 'outpatient' },
       },
       {
+        path: 'outpatient/consult/:id',
+        name: 'Consult',
+        component: () => import('@/views/outpatient/ConsultView.vue'),
+        meta: { title: '接诊', menu: 'outpatient' },
+      },
+      {
         path: 'charge',
         name: 'Charge',
         component: () => import('@/views/placeholder/ModulePlaceholder.vue'),

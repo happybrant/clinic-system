@@ -8,6 +8,10 @@ export function pageEncounters(data) {
   return request({ url: '/clinic/encounter/pageList', method: 'post', data })
 }
 
+export function getEncounterDetail(id) {
+  return request({ url: `/clinic/encounter/getDetail/${id}`, method: 'get' })
+}
+
 export function callNext(data) {
   return request({ url: '/clinic/encounter/callNext', method: 'post', data })
 }

@@ -34,7 +34,7 @@
           <el-tag :type="encType(row.status)" size="small">{{ encLabel(row.status) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="220" fixed="right">
+      <el-table-column label="操作" width="280" fixed="right">
         <template #default="{ row }">
           <el-button
             v-if="row.status === 'Waiting' || row.status === 'Skipped'"
@@ -43,6 +43,14 @@
             @click="onStart(row)"
           >
             接诊
+          </el-button>
+          <el-button
+            v-if="row.status === 'InConsult' || row.status === 'Finished'"
+            link
+            type="primary"
+            @click="openConsult(row)"
+          >
+            {{ row.status === 'Finished' ? '查看' : '病历开方' }}
           </el-button>
           <el-button v-if="row.status === 'Waiting' || row.status === 'InConsult'" link type="warning" @click="onSkip(row)">
             过号
@@ -56,6 +64,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { listDoctors } from '@/api/master'
 import {
@@ -65,6 +74,8 @@ import {
   skipEncounter,
   startEncounter,
 } from '@/api/encounter'
+
+const router = useRouter()
 
 const doctors = ref([])
 const doctorId = ref('')
@@ -109,12 +120,21 @@ async function loadQueue() {
   }
 }
 
+function openConsult(row) {
+  router.push(`/outpatient/consult/${row.id}`)
+}
+
 async function onCallNext() {
   if (!doctorId.value) return
   calling.value = true
   try {
-    await callNext({ doctorId: doctorId.value })
+    const res = await callNext({ doctorId: doctorId.value })
+    const enc = res.data || res
     ElMessage.success('已叫号并进入接诊')
+    if (enc?.id) {
+      openConsult(enc)
+      return
+    }
     status.value = ''
     await loadQueue()
   } finally {
@@ -125,7 +145,7 @@ async function onCallNext() {
 async function onStart(row) {
   await startEncounter(row.id)
   ElMessage.success('开始接诊')
-  await loadQueue()
+  openConsult(row)
 }
 
 async function onSkip(row) {
