@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.framework.backend.common.MyBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.framework.backend.prescription.entity.PrescriptionItem;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,6 +53,19 @@ public class Dispense extends MyBaseEntity {
 
   @TableField(exist = false)
   private List<DispenseItem> items;
+
+  /** 待发药预览：处方明细 */
+  @TableField(exist = false)
+  private List<PrescriptionItem> prescriptionItems;
+
+  @TableField(exist = false)
+  private String diagnosis;
+
+  @TableField(exist = false)
+  private String doctorName;
+
+  @TableField(exist = false)
+  private Boolean audited;
 
   @TableField(exist = false)
   private String keyword;

@@ -5,6 +5,7 @@
       <el-tab-pane label="医生" name="doctor" />
       <el-tab-pane label="药品" name="drug" />
       <el-tab-pane label="收费项目" name="charge" />
+      <el-tab-pane label="供应商" name="supplier" />
     </el-tabs>
 
     <div class="toolbar">
@@ -42,11 +43,21 @@
           <template #default="{ row }">{{ row.status === 'active' ? '启用' : '停用' }}</template>
         </el-table-column>
       </template>
-      <template v-else>
+      <template v-else-if="tab === 'charge'">
         <el-table-column prop="itemCode" label="编码" width="120" />
         <el-table-column prop="itemName" label="名称" />
         <el-table-column prop="itemType" label="类型" width="100" />
         <el-table-column prop="price" label="价格" width="100" />
+        <el-table-column prop="status" label="状态" width="90">
+          <template #default="{ row }">{{ row.status === 'active' ? '启用' : '停用' }}</template>
+        </el-table-column>
+      </template>
+      <template v-else>
+        <el-table-column prop="supplierCode" label="编码" width="120" />
+        <el-table-column prop="supplierName" label="名称" min-width="140" />
+        <el-table-column prop="contactName" label="联系人" width="100" />
+        <el-table-column prop="contactMobile" label="电话" width="130" />
+        <el-table-column prop="address" label="地址" min-width="160" show-overflow-tooltip />
         <el-table-column prop="status" label="状态" width="90">
           <template #default="{ row }">{{ row.status === 'active' ? '启用' : '停用' }}</template>
         </el-table-column>
@@ -83,7 +94,7 @@
           <el-form-item label="单位"><el-input v-model="form.unit" /></el-form-item>
           <el-form-item label="售价"><el-input-number v-model="form.salePrice" :min="0" :precision="2" /></el-form-item>
         </template>
-        <template v-else>
+        <template v-else-if="tab === 'charge'">
           <el-form-item label="编码"><el-input v-model="form.itemCode" /></el-form-item>
           <el-form-item label="名称"><el-input v-model="form.itemName" /></el-form-item>
           <el-form-item label="类型">
@@ -94,6 +105,19 @@
             </el-select>
           </el-form-item>
           <el-form-item label="价格"><el-input-number v-model="form.price" :min="0" :precision="2" /></el-form-item>
+        </template>
+        <template v-else>
+          <el-form-item label="编码"><el-input v-model="form.supplierCode" /></el-form-item>
+          <el-form-item label="名称"><el-input v-model="form.supplierName" /></el-form-item>
+          <el-form-item label="联系人"><el-input v-model="form.contactName" /></el-form-item>
+          <el-form-item label="电话"><el-input v-model="form.contactMobile" /></el-form-item>
+          <el-form-item label="地址"><el-input v-model="form.address" /></el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="form.status" style="width: 100%">
+              <el-option label="启用" value="active" />
+              <el-option label="停用" value="disabled" />
+            </el-select>
+          </el-form-item>
         </template>
         <el-form-item label="备注"><el-input v-model="form.remark" type="textarea" :rows="2" /></el-form-item>
       </el-form>
@@ -113,15 +137,18 @@ import {
   addDepartment,
   addDoctor,
   addDrug,
+  addSupplier,
   listDepartments,
   pageChargeItems,
   pageDepartments,
   pageDoctors,
   pageDrugs,
+  pageSuppliers,
   updateChargeItem,
   updateDepartment,
   updateDoctor,
   updateDrug,
+  updateSupplier,
 } from '@/api/master'
 
 const tab = ref('dept')
@@ -144,7 +171,17 @@ function emptyForm() {
     return { empNo: '', name: '', title: '', deptId: '', deptName: '', mobile: '', status: 'active', canSchedule: true }
   if (tab.value === 'drug')
     return { drugCode: '', drugName: '', spec: '', unit: '盒', salePrice: 0, status: 'active' }
-  return { itemCode: '', itemName: '', itemType: 'consult', price: 0, status: 'active' }
+  if (tab.value === 'charge')
+    return { itemCode: '', itemName: '', itemType: 'consult', price: 0, status: 'active' }
+  return {
+    supplierCode: '',
+    supplierName: '',
+    contactName: '',
+    contactMobile: '',
+    address: '',
+    status: 'active',
+    remark: '',
+  }
 }
 
 function onDeptPick(id) {
@@ -160,7 +197,8 @@ async function reload() {
     if (tab.value === 'dept') res = await pageDepartments(payload)
     else if (tab.value === 'doctor') res = await pageDoctors(payload)
     else if (tab.value === 'drug') res = await pageDrugs(payload)
-    else res = await pageChargeItems(payload)
+    else if (tab.value === 'charge') res = await pageChargeItems(payload)
+    else res = await pageSuppliers(payload)
     const data = res.data || res
     rows.value = data.records || []
   } finally {
@@ -190,9 +228,12 @@ async function save() {
     } else if (tab.value === 'drug') {
       if (form.id) await updateDrug(form)
       else await addDrug(form)
-    } else {
+    } else if (tab.value === 'charge') {
       if (form.id) await updateChargeItem(form)
       else await addChargeItem(form)
+    } else {
+      if (form.id) await updateSupplier(form)
+      else await addSupplier(form)
     }
     ElMessage.success('保存成功')
     dialogVisible.value = false

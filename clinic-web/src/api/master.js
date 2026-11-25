@@ -63,3 +63,19 @@ export function addChargeItem(data) {
 export function updateChargeItem(data) {
   return request({ url: '/clinic/chargeItem/update', method: 'post', data })
 }
+
+export function listSuppliers() {
+  return request({ url: '/clinic/supplier/listActive', method: 'get' })
+}
+
+export function pageSuppliers(data) {
+  return request({ url: '/clinic/supplier/pageList', method: 'post', data })
+}
+
+export function addSupplier(data) {
+  return request({ url: '/clinic/supplier/add', method: 'post', data })
+}
+
+export function updateSupplier(data) {
+  return request({ url: '/clinic/supplier/update', method: 'post', data })
+}

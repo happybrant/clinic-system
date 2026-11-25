@@ -53,4 +53,7 @@ public class InoutBound extends MyBaseEntity {
 
   @TableField(exist = false)
   private List<InoutBoundItem> items;
+
+  @TableField(exist = false)
+  private String keyword;
 }

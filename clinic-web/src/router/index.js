@@ -44,14 +44,14 @@ const routes = [
       {
         path: 'charge',
         name: 'Charge',
-        component: () => import('@/views/placeholder/ModulePlaceholder.vue'),
-        meta: { title: '收费', menu: 'charge', tip: '收银 / 账单查询' },
+        component: () => import('@/views/charge/ChargeView.vue'),
+        meta: { title: '收费', menu: 'charge' },
       },
       {
         path: 'pharmacy',
         name: 'Pharmacy',
-        component: () => import('@/views/placeholder/ModulePlaceholder.vue'),
-        meta: { title: '药房', menu: 'pharmacy', tip: '审方发药' },
+        component: () => import('@/views/pharmacy/PharmacyView.vue'),
+        meta: { title: '药房', menu: 'pharmacy' },
       },
       {
         path: 'patient',
@@ -62,8 +62,8 @@ const routes = [
       {
         path: 'inventory',
         name: 'Inventory',
-        component: () => import('@/views/placeholder/ModulePlaceholder.vue'),
-        meta: { title: '库存', menu: 'inventory', tip: '入库 / 盘点 / 近效期' },
+        component: () => import('@/views/inventory/InventoryView.vue'),
+        meta: { title: '库存', menu: 'inventory' },
       },
       {
         path: 'report',
